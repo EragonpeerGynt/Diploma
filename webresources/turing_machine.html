@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TS</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./Style/main_style.css">
+</head>
+<body>
+
+<div id='page'>
+    <div id='ide'>
+            <div id='codingArea'>
+                <div class='numbering'>
+                </div>
+                <div class='plainCode'>
+                    <textarea name="codeText" id="codeText" cols="40" rows="30"></textarea>
+                </div>
+            </div>
+    </div>
+    <div id='machine'>
+        <div class='scanner__head config__box'>
+            <div class='box__name no__select'>Heads</div>
+        </div><!--
+     --><div class='tms__configuration config__box'>
+            <div class='box__name'>Configuration</div>
+            <select class='state__select config__input'>
+                <option class='tmp_option' value='----'>----</option>
+            </select>
+        </div><!--
+     --><div class='controls config__box'>
+            <div class='box__name no__select no__select'>Controls</div>
+            <button class='control__button step__button'>Step</button>
+            <button class='control__button reset__button'>Reset</button>
+            <button class='control__button set__button'>Set</button>
+            <button class='control__button new__button'>New</button>
+     </div><!--
+     --><div class='registry config__box'>
+            <div class='box__name no__select'>Memory data</div>
+        </div>
+    </div>
+</div>
+
+<script>              
+    var number_of_heads = 1;
+    var current_state = "S0";
+    var final_state = "SF";
+    var empty_symbol = "_"
+</script>
+
+<script src='./Scripts/backend_scripts.js'></script>
+<script src='./Scripts/TMS.js'></script>
+<script src='./Scripts/IDE.js'></script>
+
+</body>
+</html>
