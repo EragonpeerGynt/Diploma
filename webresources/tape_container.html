@@ -3,6 +3,14 @@
 <head>
 <title></title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+
+pre {
+    display: inline-block;
+    overflow: hidden;
+}
+
+</style>
 </head>
 <body>
 
@@ -14,13 +22,18 @@
 
 <script>
     var number_of_tapes = 1;
-    var tape_snippet = "./Snippets/tape.htm"
+    const data =        "<div class='{tape_and_number} tape_container'>"+
+                            "<pre class='right_tape tape'></pre>"+
+                            "<pre class='head_tape tape'></pre>"+
+                            "<pre class='left_tape tape'></pre>"+
+                        "</div>"
+                        
     $(document).ready(function(){
         prepare_tapes();
     });
 
     var prepare_tapes = function() {
-        data = "<div class='{tape_and_number} tape_container'><pre class='right_tape tape'></pre><pre class='head_tape tape'></pre><pre class='left_tape tape'></pre></div>"
+        
         for (var tape_nr = 1; tape_nr <= number_of_tapes; tape_nr++) {
             var current_tape = data.replace("{tape_and_number}", "tape"+tape_nr);
             $("#tapes").append(current_tape);
