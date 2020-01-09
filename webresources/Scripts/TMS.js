@@ -15,21 +15,28 @@ $(document).ready(function(){
         $(".tms__configuration").hide()
         set_memory_registry();
         set_states();
+        update_camera_view();
     });
     $('.reset__button').click(function(){
         $(".tms__configuration").show()
         clean_memory_tapes();
+        update_camera_view();
     });
     $('.step__button').click(function(){
         if ($(".tms__configuration").is(":visible")) {
             return;
         }
+        if (current_state == final_state) {
+            window.alert("You already reached final state");
+            return;
+        }
         step_machine();
+        update_camera_view();
     });
 });
 
 var reset_machine = function() {
-    $(".head_value").each(function(){
+    $(".head__value").each(function(){
         $(this).remove();
     });
     $(".tape__registry").each(function(){
@@ -39,8 +46,15 @@ var reset_machine = function() {
         $(this).remove();
     });
     for (let i = 1; i <= number_of_heads; i++) {
-        $('.scanner__head').append("<div class='head__" + i + " head_value'></div>");
+        $('.scanner__head').append("<div class='head__" + i + " head__value'></div>");
         $('.registry').append("<div class='tape__registry'><pre class='tape__" + i + " tape__left'></pre>"+"<pre class='tape__" + i + " tape__select'></pre>"+"<pre class='tape__" + i + " tape__right'></pre></div>")
+        $('.tms__configuration').append("<input type='text' class='config__input config__input__soft initial__input" + i + "' value='' />");
+    }
+}
+
+var update_camera_view = function() {
+    for (let i = 1; i <= number_of_heads; i++) {
+        $('.head__' + i + '.head__value').html($('.tape__' + i + '.tape__select').html());
         $('.tms__configuration').append("<input type='text' class='config__input config__input__soft initial__input" + i + "' value='' />");
     }
 }
