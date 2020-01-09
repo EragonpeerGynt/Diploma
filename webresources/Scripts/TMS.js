@@ -14,9 +14,11 @@ $(document).ready(function(){
         }
         $(".tms__configuration").hide()
         set_memory_registry();
+        set_states();
     });
     $('.reset__button').click(function(){
         $(".tms__configuration").show()
+        clean_memory_tapes();
     });
     $('.step__button').click(function(){
         if ($(".tms__configuration").is(":visible")) {
@@ -58,6 +60,19 @@ var set_memory_registry = function() {
     }
 }
 
+var set_states = function() {
+    current_state = $('.state__select').val();
+    final_state = $('.state__final').val();
+}
+
+var clean_memory_tapes = function() {
+    for (let i = 1; i <= number_of_heads; i++) {
+        $('.tape__' + i + '.tape__select').html("");
+        $('.tape__' + i + '.tape__right').html("");
+        $('.tape__' + i + '.tape__left').html("");
+    }
+}
+
 var step_machine = function() {
     let program = $("#codeText").val().split("\n")
     let head_vission = [];
@@ -76,6 +91,7 @@ var step_machine = function() {
 var custom_regex = function(state, current_head, program) {
     for (let command of program) {
         if (custom_comparator(state, current_head, command.split(" ").slice(0,2))) {
+            console.log(command);
             return command.split(" ").slice(2);
         }
     }
@@ -97,8 +113,8 @@ var custom_comparator = function(state, current_head, command) {
 
 var head_writter = function(new_values) {
     for (let i = 1; i <= number_of_heads; i++) {
-        if (new_values[i] != "*") {
-            $('.tape__' + i + '.tape__select').html(new_values[i])
+        if (new_values[i-1] != "*") {
+            $('.tape__' + i + '.tape__select').html(new_values[i-1])
         }
     }
 }
@@ -110,14 +126,26 @@ var head_mover = function(moves) {
         let select = $('.tape__' + i + '.tape__select').html();
         if (moves[i-1] == "r") {
             $('.tape__' + i + '.tape__left').html(left + select);
-            $('.tape__' + i + '.tape__select').html(right.split("")[0]);
-            $('.tape__' + i + '.tape__right').html(right.split("").slice(1).join(""));
+            if (right != "") {
+                $('.tape__' + i + '.tape__select').html(right.split("")[0]);
+                $('.tape__' + i + '.tape__right').html(right.split("").slice(1).join(""));
+            }
+            else {
+                $('.tape__' + i + '.tape__select').html("_");
+                $('.tape__' + i + '.tape__right').html("");
+            }
         }
         else if (moves[i-1] == "l") {
             let left_length = left.split("").length
             $('.tape__' + i + '.tape__right').html(select + right);
-            $('.tape__' + i + '.tape__select').html(left.split("")[left_length-1]);
-            $('.tape__' + i + '.tape__left').html(left.split("").slice(0, left_length-1).join(""));
+            if (left != "") {
+                $('.tape__' + i + '.tape__select').html(left.split("")[left_length-1]);
+                $('.tape__' + i + '.tape__left').html(left.split("").slice(0, left_length-1).join(""));
+            }
+            else {
+                $('.tape__' + i + '.tape__select').html("_");
+                $('.tape__' + i + '.tape__left').html(left.split("").slice(0, left_length-1).join(""));
+            }
         }
     }
 }
