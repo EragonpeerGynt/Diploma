@@ -103,7 +103,7 @@ tr, th {
 }
 
 .scanner__head, .tms__configuration, .controls, .registry {
-    position: relative;
+    position: absolute;
 }
 
 .scanner__head {
