@@ -106,8 +106,49 @@ tr, th {
 }
 
 
-.scanner__head, .tms__configuration, .controls, .registry {
+.basic__information, .tms__configuration, .controls, .registry {
     position: absolute;
+}
+
+.state_of_machine, .scanner__head {
+    display:inline-block;
+}
+
+.basic__information {
+    padding: 10px;
+    background-color: grey;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    height:auto;
+}
+
+#state__display, #state__locker {
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color:black;
+    font-size: 30px;
+    text-align: center;
+    height: 34px;
+    width: 4em;
+    line-height: 34px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    margin-top:10px;
+    margin-left:auto;
+    margin-right:10px;
+}
+
+#state__locker {
+    font-size: 20px;
+    width: 8em;
+
+}
+
+.basic__information {
+    overflow: visible;
 }
 
 .scanner__head {
@@ -251,4 +292,8 @@ pre {
 
 .tape__select {
     color: red;
+}
+
+#state__display:disabled {
+    color: black;
 }

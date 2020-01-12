@@ -1,5 +1,6 @@
 $(document).ready(function(){
     reset_machine();
+    update_displayed_state();
     $('.config__box').mousedown(handle_mousedown);
     $('.new__button').click(function(){
         var answer = window.confirm('Do you really want to clear IDE window?');
@@ -7,6 +8,7 @@ $(document).ready(function(){
             $('#codeText').val("");
             updateRows();
         }
+        update_displayed_state();
     });
     $('.set__button').click(function(){
         if ($(".tms__configuration").is(":hidden")) {
@@ -16,6 +18,7 @@ $(document).ready(function(){
         set_memory_registry();
         set_states();
         update_camera_view();
+        update_displayed_state();
     });
     $('.reset__button').click(function(){
         if ($(".tms__configuration").is(":hidden")) {
@@ -24,6 +27,7 @@ $(document).ready(function(){
         clean_memory_tapes();
         soft_reset_machine();
         update_camera_view();
+        update_displayed_state();
     });
     $('.step__button').click(function(){
         if ($(".tms__configuration").is(":visible")) {
@@ -35,19 +39,33 @@ $(document).ready(function(){
         }
         step_machine();
         update_camera_view();
+        update_displayed_state();
+    });
+    $('#state__locker').click(function() {
+        if ($('#state__display').prop('disabled')) {
+            $('#state__display').prop('disabled', false);
+            $('#state__locker').html('ZAKLENI');
+        }
+        else {
+            $('#state__display').prop('disabled', true);
+            $('#state__locker').html('SPREMENI');
+        }
+        update_displayed_state();
+    });
+
+    $("#state__display").on("input", function(e) {
+        var input = $(this).val();
+        if(input != current_state) {
+            current_state = input;
+        }
+        update_displayed_state();
     });
 });
 
 var reset_machine = function() {
-    $(".head__value").each(function(){
-        $(this).remove();
-    });
-    $(".tape__registry").each(function(){
-        $(this).remove();
-    });
-    $(".config__input__soft").each(function(){
-        $(this).remove();
-    });
+    $(".head__value").remove();
+    $(".tape__registry").remove();
+    $(".config__input__soft").remove();
     for (let i = 1; i <= number_of_heads; i++) {
         $('.scanner__head').append("<div class='head__" + i + " head__value'></div>");
         $('.registry').append("<div class='tape__registry'><pre class='tape__" + i + " tape__left'></pre>"+"<pre class='tape__" + i + " tape__select'></pre>"+"<pre class='tape__" + i + " tape__right'></pre></div>")
@@ -56,12 +74,8 @@ var reset_machine = function() {
 }
 
 var soft_reset_machine = function() {
-    $(".head__value").each(function(){
-        $(this).remove();
-    });
-    $(".tape__registry").each(function(){
-        $(this).remove();
-    });
+    $(".head__value").remove();
+    $(".tape__registry").remove();
     for (let i = 1; i <= number_of_heads; i++) {
         $('.scanner__head').append("<div class='head__" + i + " head__value'></div>");
         $('.registry').append("<div class='tape__registry'><pre class='tape__" + i + " tape__left'></pre>"+"<pre class='tape__" + i + " tape__select'></pre>"+"<pre class='tape__" + i + " tape__right'></pre></div>")
@@ -177,4 +191,8 @@ var head_mover = function(moves) {
             }
         }
     }
+}
+
+var update_displayed_state = function() {
+    $('#state__display').val(current_state);
 }
