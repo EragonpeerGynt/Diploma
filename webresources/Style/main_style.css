@@ -66,6 +66,7 @@ blockquote, q {
     text-align: center;
     display: inline-block;
     margin-top: 3px;
+    padding-bottom: 0px;
 }
 
 .numberingTable{
@@ -99,8 +100,11 @@ tr, th {
 
 #ide, #machine {
     display:inline-block;
-    vertical-align: bottom;
 }
+#machine {
+    overflow: visible;
+}
+
 
 .scanner__head, .tms__configuration, .controls, .registry {
     position: absolute;
