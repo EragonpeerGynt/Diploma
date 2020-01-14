@@ -154,7 +154,7 @@ var custom_regex = function(state, current_head, program) {
     for (let command of program) {
         if (custom_comparator(state, current_head, command.split(" ").slice(0,2))) {
             previous_step.step = command;
-            ide_index_previous.i = command_index_finder(command, program)
+            ide_index_previous.i = command_index_finder(command)
             return command.split(" ").slice(2);
         }
     }
@@ -217,10 +217,8 @@ var update_displayed_state = function() {
     $('#state__display').val(current_state);
 }
 
-var command_index_finder = function(command, program) {
-    console.log(program);
-    let program = new Array(program);
-    console.log(program);
+var command_index_finder = function(command) {
+    let program = $("#codeText").val().split("\n", -1)
     for(let i = 0; i < program.length; i++) {
         console.log(i);
         if (program[i] == command) {
@@ -233,14 +231,14 @@ var command_index_finder = function(command, program) {
 var find_next_step = function() {
     let program = $("#codeText").val().split("\n")
     let head_vission = [];
-    ide_index_previous.i = command_index_finder(previous_step.step, program);
+    ide_index_previous.i = command_index_finder(previous_step.step);
     for (let i = 1; i <= number_of_heads; i++) {
         head_vission.push($('.tape__' + i + '.tape__select').html());
     }
     for (let command of program) {
         if (custom_comparator(current_state, head_vission, command.split(" ").slice(0,2))) {
             next_step.step = command;
-            return command_index_finder(command, program);
+            return command_index_finder(command);
         }
     }
     next_step.step = "NaN";
