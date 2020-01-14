@@ -218,11 +218,13 @@ var update_displayed_state = function() {
 }
 
 var command_index_finder = function(command) {
-    let program = $("#codeText").val().split("\n", -1)
-    for(let i = 0; i < program.length; i++) {
-        console.log(i);
-        if (program[i] == command) {
-            return parseInt(i)+1;
+    if (command == null) {
+        return null;
+    }
+    let program = $("#codeText").val().split("\n", -1);
+    for(let command_index = 0; command_index < program.length; command_index++) {
+        if (program[parseInt(command_index)] == command) {
+            return parseInt(command_index)+1;
         }
     }
     return false;
