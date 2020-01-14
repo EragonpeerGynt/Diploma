@@ -1,6 +1,6 @@
 
 var lines = 0;
-var timeout = 5000, timer = null;
+var timeout = 3000, timer = null;
 $(document).ready(function(){
 
     var textArea = $("#codeText"),

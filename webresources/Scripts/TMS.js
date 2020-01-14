@@ -218,7 +218,11 @@ var update_displayed_state = function() {
 }
 
 var command_index_finder = function(command, program) {
-    for(let i in program) {
+    console.log(program);
+    let program = new Array(program);
+    console.log(program);
+    for(let i = 0; i < program.length; i++) {
+        console.log(i);
         if (program[i] == command) {
             return parseInt(i)+1;
         }
