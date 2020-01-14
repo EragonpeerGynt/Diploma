@@ -1,3 +1,4 @@
+var timeout = 3000, timer = null;
 var handle_mousedown = function(e){
     window.my_dragging = {};
     my_dragging.pageX0 = e.pageX;
@@ -18,4 +19,11 @@ var handle_mousedown = function(e){
     $('body')
     .on('mouseup', handle_mouseup)
     .on('mousemove', handle_dragging);
+}
+
+var ide_timer = function() {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+        ide_index_next.i = find_next_step();
+    }, timeout);
 }

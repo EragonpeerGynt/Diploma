@@ -58,6 +58,7 @@ $(document).ready(function(){
         var input = $(this).val();
         if(input != current_state) {
             current_state = input;
+            ide_timer()
         }
         update_displayed_state();
     });
@@ -165,7 +166,7 @@ var custom_comparator = function(state, current_head, command) {
     if (state == command[0]) {
         let command_blob = command[1].split(",");
         for (let j = 0; j < current_head.length; j++) {
-            if (command_blob[j] != current_head[j]) {
+            if (command_blob[j] != current_head[j] && command_blob[j] != "*") {
                 return false;
             }
         }
