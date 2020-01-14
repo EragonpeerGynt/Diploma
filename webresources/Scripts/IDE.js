@@ -1,5 +1,6 @@
 
 var lines = 0;
+var timeout = 5000, timer = null;
 $(document).ready(function(){
 
     var textArea = $("#codeText"),
@@ -20,6 +21,11 @@ $(document).ready(function(){
             }
             lines = nrRows;
         }
+
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            ide_index_next.i = find_next_step();
+        }, timeout);
 
     });
     $("#codeText").scroll(function() {

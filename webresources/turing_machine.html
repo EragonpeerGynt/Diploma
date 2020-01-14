@@ -51,6 +51,74 @@
     var current_state = "S0";
     var final_state = "SF";
     var empty_symbol = "_"
+    var previous_step = {
+        internal_step: "",
+        self_listener: function(val) {},
+        set step(val) {
+            this.internal_step = val;
+            this.self_listener(val);
+        },
+        get step() {
+            return this.internal_step;
+        },
+        register_listener: function(listener) {
+            this.self_listener = listener;
+        },
+        reset_step_value: function() {
+            this.internal_step = "";
+        }
+    };
+    var next_step = {
+        internal_step: "",
+        self_listener: function(val) {},
+        set step(val) {
+            this.internal_step = val;
+            this.self_listener(val);
+        },
+        get step() {
+            return this.internal_step;
+        },
+        register_listener: function(listener) {
+            this.self_listener = listener;
+        },
+        reset_step_value: function() {
+            this.internal_step = "";
+        }
+    };
+    var ide_index_previous = {
+        internal_i: null,
+        self_listener: function(val) {},
+        set i(val) {
+            this.self_listener(val);
+            this.internal_i = val;
+        },
+        get i() {
+            return this.internal_i;
+        },
+        register_listener: function(listener) {
+            this.self_listener = listener;
+        },
+        reset_index_value: function() {
+            this.internal_step = null;
+        }
+    };
+    var ide_index_next = {
+        internal_i: null,
+        self_listener: function(val) {},
+        set i(val) {
+            this.self_listener(val);
+            this.internal_i = val;
+        },
+        get i() {
+            return this.internal_i;
+        },
+        register_listener: function(listener) {
+            this.self_listener = listener;
+        },
+        reset_index_value: function() {
+            this.internal_step = null;
+        }
+    };
 </script>
 
 <script src='./Scripts/backend_scripts.js'></script>

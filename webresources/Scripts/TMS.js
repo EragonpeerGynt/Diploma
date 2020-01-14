@@ -40,6 +40,7 @@ $(document).ready(function(){
         step_machine();
         update_camera_view();
         update_displayed_state();
+        ide_index_next.i = find_next_step();
     });
     $('#state__locker').click(function() {
         if ($('#state__display').prop('disabled')) {
@@ -59,6 +60,20 @@ $(document).ready(function(){
             current_state = input;
         }
         update_displayed_state();
+    });
+
+    previous_step.register_listener(function(val) {
+        console.log("previous step is " + val)
+    });
+    next_step.register_listener(function(val) {
+        console.log("current next step is " + val)
+    });
+
+    ide_index_previous.register_listener(function(val) {
+        console.log("new index of previous step is " + val)
+    });
+    ide_index_next.register_listener(function(val) {
+        console.log("new index of next step is " + val)
     });
 });
 
@@ -123,6 +138,10 @@ var step_machine = function() {
         head_vission.push($('.tape__' + i + '.tape__select').html());
     }
     let execute_command = custom_regex(current_state, head_vission, program);
+    if (execute_command == null) {
+        window.alert("Najdena ni bila nobena\nustrezna translacija");
+        return 
+    }
     let command_setters = execute_command[0].split(",");
     let command_movers = execute_command[1].split(',');
     let command_new_state = execute_command[2];
@@ -134,7 +153,8 @@ var step_machine = function() {
 var custom_regex = function(state, current_head, program) {
     for (let command of program) {
         if (custom_comparator(state, current_head, command.split(" ").slice(0,2))) {
-            console.log(command);
+            previous_step.step = command;
+            ide_index_previous.i = command_index_finder(command, program)
             return command.split(" ").slice(2);
         }
     }
@@ -195,4 +215,30 @@ var head_mover = function(moves) {
 
 var update_displayed_state = function() {
     $('#state__display').val(current_state);
+}
+
+var command_index_finder = function(command, program) {
+    for(let i in program) {
+        if (program[i] == command) {
+            return parseInt(i)+1;
+        }
+    }
+    return false;
+}
+
+var find_next_step = function() {
+    let program = $("#codeText").val().split("\n")
+    let head_vission = [];
+    ide_index_previous.i = command_index_finder(previous_step.step, program);
+    for (let i = 1; i <= number_of_heads; i++) {
+        head_vission.push($('.tape__' + i + '.tape__select').html());
+    }
+    for (let command of program) {
+        if (custom_comparator(current_state, head_vission, command.split(" ").slice(0,2))) {
+            next_step.step = command;
+            return command_index_finder(command, program);
+        }
+    }
+    next_step.step = "NaN";
+    return null;
 }
