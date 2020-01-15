@@ -72,9 +72,13 @@ $(document).ready(function(){
 
     ide_index_previous.register_listener(function(val) {
         console.log("new index of previous step is " + val)
+        $('.step__previous').remove();
+        $('#number' + val).append("<div class='step step__previous'>");
     });
     ide_index_next.register_listener(function(val) {
         console.log("new index of next step is " + val)
+        $('.step__next').remove();
+        $('#number' + val).append("<div class='step step__next'>");
     });
 });
 

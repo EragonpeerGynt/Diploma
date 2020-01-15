@@ -12,13 +12,13 @@
     <div id='ide'>
             <div id='codingArea'>
                 <div class='numbering'>
-                </div>
-                <div class='plainCode'>
+                </div><!--
+             --><div class='plainCode'>
                     <textarea name="codeText" id="codeText" cols="40" rows="30"></textarea>
                 </div>
             </div>
-    </div>
-    <div id='machine'>
+    </div><!--
+ --><div id='machine'>
         <div class='basic__information config__box'>
             <div class='state_of_machine'>
                 <input id='state__display' value='' disabled />
@@ -52,7 +52,7 @@
     var final_state = "SF";
     var empty_symbol = "_"
     var previous_step = {
-        internal_step: "",
+        internal_step: null,
         self_listener: function(val) {},
         set step(val) {
             this.internal_step = val;
@@ -69,7 +69,7 @@
         }
     };
     var next_step = {
-        internal_step: "",
+        internal_step: null,
         self_listener: function(val) {},
         set step(val) {
             this.internal_step = val;
