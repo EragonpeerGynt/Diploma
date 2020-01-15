@@ -19,16 +19,9 @@ $(document).ready(function(){
         set_states();
         update_camera_view();
         update_displayed_state();
+        find_next_step();
     });
-    $('.reset__button').click(function(){
-        if ($(".tms__configuration").is(":hidden")) {
-            $(".tms__configuration").show();
-        }
-        clean_memory_tapes();
-        soft_reset_machine();
-        update_camera_view();
-        update_displayed_state();
-    });
+    $('.reset__button').click(function() {reset_button()});
     $('.step__button').click(function(){
         if ($(".tms__configuration").is(":visible")) {
             return;
@@ -81,6 +74,21 @@ $(document).ready(function(){
         $('#number' + val).append("<div class='step step__next'>");
     });
 });
+
+var reset_button = function() {
+    if ($(".tms__configuration").is(":hidden")) {
+        $(".tms__configuration").show();
+    }
+    clean_memory_tapes();
+    soft_reset_machine();
+    update_camera_view();
+    update_displayed_state();
+    previous_step.reset_step_value();
+    next_step.reset_step_value();
+    ide_index_previous.reset_index_value();
+    ide_index_next.reset_index_value();
+    find_next_step();
+}
 
 var reset_machine = function() {
     $(".head__value").remove();
@@ -245,9 +253,10 @@ var find_next_step = function() {
     for (let command of program) {
         if (custom_comparator(current_state, head_vission, command.split(" ").slice(0,2))) {
             next_step.step = command;
-            return command_index_finder(command);
+            ide_index_next.i = command_index_finder(command);
+            return ide_index_next.i
         }
     }
-    next_step.step = "NaN";
+    next_step.step = null;
     return null;
 }
