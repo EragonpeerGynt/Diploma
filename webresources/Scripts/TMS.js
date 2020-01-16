@@ -5,13 +5,17 @@ $(document).ready(function(){
     update_displayed_state();
     $('.config__box').mousedown(handle_mousedown);
     $('.new__button').click(function(){
+        if (auto_run_timer != null) {
+            clearInterval(auto_run_timer);
+            auto_run_timer = null;
+        }
         var answer = window.confirm('Do you really want to clear IDE window?');
         if (answer) {
             $('#codeText').val("");
             updateRows();
         }
-        update_displayed_state();
         reset_button();
+        new_button_disables();
     });
     $('.set__button').click(function(){
         if ($(".tms__configuration").is(":hidden")) {
@@ -21,14 +25,24 @@ $(document).ready(function(){
         set_memory_registry();
         set_states();
         update_camera_view();
-        update_displayed_state();
         find_next_step();
-        $(".run__button").prop("disabled", false);
+        set_button_disables();
     });
-    $('.reset__button').click(function() {reset_button()});
-    $('.step__button').click(function(){step_button()});
-    $('.run__button').click(function(selector) {auto_run(selector, "run")});
-    $('.pause__button').click(function(selector) {auto_run(selector, "pause")});
+    $('.reset__button').click(function() {
+        reset_button();
+        reset_button_disables();
+    });
+    $('.step__button').click(function(){
+        step_button();
+    });
+    $('.run__button').click(function(selector) {
+        auto_run(selector, "run");
+        run_button_disables();
+    });
+    $('.pause__button').click(function(selector) {
+        auto_run(selector, "pause");
+        pause_button_disables();
+    });
     $('#state__locker').click(function() {
         if ($('#state__display').prop('disabled')) {
             $('#state__display').prop('disabled', false);
@@ -38,7 +52,6 @@ $(document).ready(function(){
             $('#state__display').prop('disabled', true);
             $('#state__locker').html('SPREMENI');
         }
-        update_displayed_state();
     });
 
     $("#state__display").on("input", function(e) {
@@ -47,7 +60,6 @@ $(document).ready(function(){
             current_state = input;
             ide_timer()
         }
-        update_displayed_state();
     });
 
     previous_step.register_listener(function(val) {
@@ -67,6 +79,8 @@ $(document).ready(function(){
         $('.step__next').remove();
         $('#number' + val).append("<div class='step step__next'>");
     });
+    
+    $('.control__button').click(update_displayed_state);
 });
 
 var step_button = function() {
@@ -86,16 +100,10 @@ var step_button = function() {
 var auto_run = function(selector, command) {
     if (command == 'run' && auto_run_timer == null) {
         auto_run_timer_init();
-        $(selector.target).prop("disabled", true);
-        $(".pause__button").prop("disabled", false);
-        $(".step__button").prop("disabled", true);
     }
     else if (command == 'pause' && auto_run_timer != null) {
         clearInterval(auto_run_timer);
         auto_run_timer = null;
-        $(selector.target).prop("disabled", true);
-        $(".run__button").prop("disabled", false);
-        $(".step__button").prop("disabled", true);
     }
 }
 
@@ -105,8 +113,8 @@ var auto_run_timer_init = function() {
         if (current_state == final_state) {
             clearInterval(auto_run_timer);
             auto_run_timer = null;
-            $("pause__button").prop("disabled", true);
-            $(".run__button").prop("disabled", false);
+            pause_button_disables();
+            $(".run__button").prop("disabled", true);
         }
     }, auto_run_step);
 }
@@ -114,6 +122,10 @@ var auto_run_timer_init = function() {
 var reset_button = function() {
     if ($(".tms__configuration").is(":hidden")) {
         $(".tms__configuration").show();
+    }
+    if (auto_run_timer != null) {
+        clearInterval(auto_run_timer);
+        auto_run_timer = null;
     }
     clean_memory_tapes();
     soft_reset_machine();
@@ -124,7 +136,6 @@ var reset_button = function() {
     ide_index_previous.reset_index_value();
     ide_index_next.reset_index_value();
     find_next_step();
-    $(".run__button").prop("disabled", false);
 }
 
 var reset_machine = function() {
@@ -296,4 +307,49 @@ var find_next_step = function() {
     }
     next_step.step = null;
     return null;
+}
+
+var reset_button_disables = function() {
+    $(".step__button").prop("disabled", true);
+    $(".run__button").prop("disabled", true);
+    $(".pause__button").prop("disabled", true);
+    $(".reset__button").prop("disabled", true);
+    $(".set__button").prop("disabled", false);
+    $(".new__button").prop("disabled", false);
+}
+
+var run_button_disables = function() {
+    $(".step__button").prop("disabled", true);
+    $(".run__button").prop("disabled", true);
+    $(".pause__button").prop("disabled", false);
+    $(".reset__button").prop("disabled", false);
+    $(".set__button").prop("disabled", true);
+    $(".new__button").prop("disabled", false);
+}
+
+var pause_button_disables = function() {
+    $(".step__button").prop("disabled", false);
+    $(".run__button").prop("disabled", false);
+    $(".pause__button").prop("disabled", true);
+    $(".reset__button").prop("disabled", false);
+    $(".set__button").prop("disabled", true);
+    $(".new__button").prop("disabled", false);
+}
+
+var set_button_disables = function() {
+    $(".step__button").prop("disabled", false);
+    $(".run__button").prop("disabled", false);
+    $(".pause__button").prop("disabled", true);
+    $(".reset__button").prop("disabled", false);
+    $(".set__button").prop("disabled", true);
+    $(".new__button").prop("disabled", false);
+}
+
+var new_button_disables = function() {
+    $(".step__button").prop("disabled", true);
+    $(".run__button").prop("disabled", true);
+    $(".pause__button").prop("disabled", true);
+    $(".reset__button").prop("disabled", true);
+    $(".set__button").prop("disabled", false);
+    $(".new__button").prop("disabled", false);
 }
