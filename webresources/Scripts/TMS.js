@@ -1,3 +1,5 @@
+var auto_run_step = 100, auto_run_timer = null;
+
 $(document).ready(function(){
     reset_machine();
     update_displayed_state();
@@ -9,6 +11,7 @@ $(document).ready(function(){
             updateRows();
         }
         update_displayed_state();
+        reset_button();
     });
     $('.set__button').click(function(){
         if ($(".tms__configuration").is(":hidden")) {
@@ -20,21 +23,12 @@ $(document).ready(function(){
         update_camera_view();
         update_displayed_state();
         find_next_step();
+        $(".run__button").prop("disabled", false);
     });
     $('.reset__button').click(function() {reset_button()});
-    $('.step__button').click(function(){
-        if ($(".tms__configuration").is(":visible")) {
-            return;
-        }
-        if (current_state == final_state) {
-            window.alert("You already reached final state");
-            return;
-        }
-        step_machine();
-        update_camera_view();
-        update_displayed_state();
-        ide_index_next.i = find_next_step();
-    });
+    $('.step__button').click(function(){step_button()});
+    $('.run__button').click(function(selector) {auto_run(selector, "run")});
+    $('.pause__button').click(function(selector) {auto_run(selector, "pause")});
     $('#state__locker').click(function() {
         if ($('#state__display').prop('disabled')) {
             $('#state__display').prop('disabled', false);
@@ -75,6 +69,48 @@ $(document).ready(function(){
     });
 });
 
+var step_button = function() {
+    if ($(".tms__configuration").is(":visible")) {
+        return;
+    }
+    if (current_state == final_state) {
+        window.alert("You already reached final state");
+        return;
+    }
+    step_machine();
+    update_camera_view();
+    update_displayed_state();
+    ide_index_next.i = find_next_step();
+}
+
+var auto_run = function(selector, command) {
+    if (command == 'run' && auto_run_timer == null) {
+        auto_run_timer_init();
+        $(selector.target).prop("disabled", true);
+        $(".pause__button").prop("disabled", false);
+        $(".step__button").prop("disabled", true);
+    }
+    else if (command == 'pause' && auto_run_timer != null) {
+        clearInterval(auto_run_timer);
+        auto_run_timer = null;
+        $(selector.target).prop("disabled", true);
+        $(".run__button").prop("disabled", false);
+        $(".step__button").prop("disabled", true);
+    }
+}
+
+var auto_run_timer_init = function() {
+    auto_run_timer = setInterval(function() {
+        step_button();
+        if (current_state == final_state) {
+            clearInterval(auto_run_timer);
+            auto_run_timer = null;
+            $("pause__button").prop("disabled", true);
+            $(".run__button").prop("disabled", false);
+        }
+    }, auto_run_step);
+}
+
 var reset_button = function() {
     if ($(".tms__configuration").is(":hidden")) {
         $(".tms__configuration").show();
@@ -88,6 +124,7 @@ var reset_button = function() {
     ide_index_previous.reset_index_value();
     ide_index_next.reset_index_value();
     find_next_step();
+    $(".run__button").prop("disabled", false);
 }
 
 var reset_machine = function() {
