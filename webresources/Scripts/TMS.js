@@ -9,13 +9,13 @@ $(document).ready(function(){
             clearInterval(auto_run_timer);
             auto_run_timer = null;
         }
-        var answer = window.confirm('Do you really want to clear IDE window?');
-        if (answer) {
-            $('#codeText').val("");
-            updateRows();
-        }
+        var anwser = window.prompt('How many tapes do you need?', number_of_heads);
+        $('#codeText').val("");
+        updateRows();
         reset_button();
         new_button_disables();
+        number_of_heads = anwser;
+        reset_machine();
     });
     $('.set__button').click(function(){
         if ($(".tms__configuration").is(":hidden")) {
