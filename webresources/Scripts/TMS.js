@@ -79,6 +79,13 @@ $(document).ready(function(){
         $('.step__next').remove();
         $('#number' + val).append("<div class='step step__next'>");
     });
+    non_deterministic_errors.register_listener(function(val) {
+        console.log("Non deterministic indexes are " + val)
+        $('.step__nondeterministic').remove();
+        for(rowNum of val) {
+            $('#number' + (parseInt(rowNum)+1)).append("<div class='step step__nondeterministic'>");
+        }
+    });
     
     $('.control__button').click(update_displayed_state);
 });
@@ -110,7 +117,7 @@ var auto_run = function(selector, command) {
 var auto_run_timer_init = function() {
     auto_run_timer = setInterval(function() {
         step_button();
-        if (current_state == final_state) {
+        if (current_state == final_state || find_next_step() == null) {
             clearInterval(auto_run_timer);
             auto_run_timer = null;
             pause_button_disables();
@@ -248,7 +255,7 @@ var head_mover = function(moves) {
         let left = $('.tape__' + i + '.tape__left').html();
         let right = $('.tape__' + i + '.tape__right').html();
         let select = $('.tape__' + i + '.tape__select').html();
-        if (moves[i-1] == "r") {
+        if (moves[i-1].toLowerCase() == "r") {
             $('.tape__' + i + '.tape__left').html(left + select);
             if (right != "") {
                 $('.tape__' + i + '.tape__select').html(right.split("")[0]);
@@ -259,7 +266,7 @@ var head_mover = function(moves) {
                 $('.tape__' + i + '.tape__right').html("");
             }
         }
-        else if (moves[i-1] == "l") {
+        else if (moves[i-1].toLowerCase() == "l") {
             let left_length = left.split("").length
             $('.tape__' + i + '.tape__right').html(select + right);
             if (left != "") {
@@ -278,6 +285,33 @@ var update_displayed_state = function() {
     $('#state__display').val(current_state);
 }
 
+var find_full_execute_match = function() {
+    let non_deterministic_list = [];
+    let program = $("#codeText").val().split("\n", -1);
+    for (let search_index = 0; search_index < program.length; search_index ++) {
+        let execute_command = program[search_index].split(" ").slice(0,2);
+        let tmp_storadge = execute_command_finder(execute_command, search_index);
+        if (tmp_storadge != null) {
+            non_deterministic_list.push(tmp_storadge);
+        }
+    }
+    return non_deterministic_list.sort();
+}
+
+var execute_command_finder = function(execute_command, parent_command) {
+    if (execute_command == null) {
+        return null;
+    }
+    let program = $("#codeText").val().split("\n", -1);
+    for(let command_index = parent_command+1; command_index < program.length; command_index++) {
+        let tested_command = program[command_index].split(" ").slice(0,2);
+        if(execute_command[0] == tested_command[0] && execute_command[1] == tested_command[1]) {
+            return command_index;
+        }
+    }
+    return null;
+}
+
 var command_index_finder = function(command) {
     if (command == null) {
         return null;
@@ -288,7 +322,7 @@ var command_index_finder = function(command) {
             return parseInt(command_index)+1;
         }
     }
-    return false;
+    return null;
 }
 
 var find_next_step = function() {

@@ -25,5 +25,6 @@ var ide_timer = function() {
     clearTimeout(timer);
     timer = setTimeout(function() {
         ide_index_next.i = find_next_step();
+        non_deterministic_errors.i = find_full_execute_match();
     }, timeout);
 }

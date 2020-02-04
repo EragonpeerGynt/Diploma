@@ -119,6 +119,12 @@ tr, th {
     background-color: rgba(0, 167, 36, 0.5);
 }
 
+.step__nondeterministic {
+    left:0%;
+    right:0%;
+    background-color: black;
+}
+
 #ide, #machine {
     display:inline-block;
 }

@@ -67,7 +67,7 @@
             this.self_listener = listener;
         },
         reset_step_value: function() {
-            this.step = null;
+            this.internal_step = null;
         }
     };
     var next_step = {
@@ -84,7 +84,7 @@
             this.self_listener = listener;
         },
         reset_step_value: function() {
-            this.step = null;
+            this.internal_step = null;
         }
     };
     var ide_index_previous = {
@@ -101,7 +101,7 @@
             this.self_listener = listener;
         },
         reset_index_value: function() {
-            this.i = null;
+            this.internal_i = null;
         }
     };
     var ide_index_next = {
@@ -118,9 +118,26 @@
             this.self_listener = listener;
         },
         reset_index_value: function() {
-            this.i = null;
+            this.internal_i = null;
         }
     };
+    var non_deterministic_errors = {
+        internal_index: [],
+        self_listener: function(val) {},
+        set i(val) {
+            this.self_listener(val);
+            this.internal_index = val;
+        },
+        get i() {
+            return this.internal_index;
+        },
+        register_listener: function(listener) {
+            this.self_listener = listener;
+        },
+        reset_index_value: function() {
+            this.internal_index = [];
+        }
+    }
 </script>
 
 <script src='./Scripts/backend_scripts.js'></script>
