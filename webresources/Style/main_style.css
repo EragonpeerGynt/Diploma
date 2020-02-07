@@ -133,7 +133,7 @@ tr, th {
 }
 
 
-.basic__information, .tms__configuration, .controls, .registry {
+.basic__information, .tms__configuration, .registry {
     position: absolute;
 }
 
@@ -209,11 +209,6 @@ tr, th {
 }
 
 .controls {
-    background-color: grey;
-    border-style: solid;
-    border-width: 1px;
-    border-color: black;
-    height:auto;
     display: inline-block;
     vertical-align: bottom;
     margin:1px;
@@ -284,20 +279,19 @@ pre {
 }
 
 .control__button {
-    display: block;
     background-color: white;
     border-style: solid;
     border-width: 1px;
     border-color:black;
     font-size: 28px;
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 10px;
     margin-bottom: 10px;
     height: 34px;
     line-height: 34px;
-    width: 6em;
+    min-width: 6em;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .config__input {
@@ -315,6 +309,34 @@ pre {
     height: 34px;
     line-height: 34px;
     width: 6em;
+}
+
+.box__configuration {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-size: 28px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 34px;
+    line-height: 34px;
+    width: 6em;
+    background-color: rgba(0, 0, 0, 0);
+    border-style: hidden;
+}
+
+#overhead__commands {
+    display: block;
+    width: 100%;
+    background-color: grey;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    height:auto;
+}
+
+.controls {
+    display: inline;
 }
 
 .tape__select {
