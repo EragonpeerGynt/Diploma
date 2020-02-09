@@ -35,6 +35,9 @@ $(document).ready(function(){
     $('.step__button').click(function(){
         step_button();
     });
+    $('.previous__button').click(function(){
+        revert_button();
+    });
     $('.run__button').click(function(selector) {
         auto_run(selector, "run");
         run_button_disables();
@@ -99,6 +102,23 @@ var step_button = function() {
         return;
     }
     step_machine();
+    update_camera_view();
+    update_displayed_state();
+    ide_index_next.i = find_next_step();
+}
+
+var revert_button = function() {
+    if ($(".tms__configuration").is(":visible")) {
+        return;
+    }
+    if (step_history.private_history.length == 0) {
+        window.alert("You already reached first state");
+        return;
+    }
+    var reverted_move = step_history.previous_step.split(" ");
+    reverse_head_mover(reverted_move[2].split(","));
+    head_writter(reverted_move[1].split(","));
+    current_state = reverted_move[0];
     update_camera_view();
     update_displayed_state();
     ide_index_next.i = find_next_step();
@@ -210,6 +230,9 @@ var step_machine = function() {
         window.alert("Najdena ni bila nobena\nustrezna translacija");
         return 
     }
+    var previous_step_state = (([current_state].concat(head_vission)).concat([execute_command[1]])).join(" ");
+    console.log(previous_step_state);
+    step_history.new_step = previous_step_state;
     let command_setters = execute_command[0].split(",");
     let command_movers = execute_command[1].split(',');
     let command_new_state = execute_command[2];
@@ -267,6 +290,37 @@ var head_mover = function(moves) {
             }
         }
         else if (moves[i-1].toLowerCase() == "l") {
+            let left_length = left.split("").length
+            $('.tape__' + i + '.tape__right').html(select + right);
+            if (left != "") {
+                $('.tape__' + i + '.tape__select').html(left.split("")[left_length-1]);
+                $('.tape__' + i + '.tape__left').html(left.split("").slice(0, left_length-1).join(""));
+            }
+            else {
+                $('.tape__' + i + '.tape__select').html(empty_symbol);
+                $('.tape__' + i + '.tape__left').html(left.split("").slice(0, left_length-1).join(""));
+            }
+        }
+    }
+}
+
+var reverse_head_mover = function(moves) {
+    for (let i = 1; i <= number_of_heads; i++) {
+        let left = $('.tape__' + i + '.tape__left').html();
+        let right = $('.tape__' + i + '.tape__right').html();
+        let select = $('.tape__' + i + '.tape__select').html();
+        if (moves[i-1].toLowerCase() == "l") {
+            $('.tape__' + i + '.tape__left').html(left + select);
+            if (right != "") {
+                $('.tape__' + i + '.tape__select').html(right.split("")[0]);
+                $('.tape__' + i + '.tape__right').html(right.split("").slice(1).join(""));
+            }
+            else {
+                $('.tape__' + i + '.tape__select').html(empty_symbol);
+                $('.tape__' + i + '.tape__right').html("");
+            }
+        }
+        else if (moves[i-1].toLowerCase() == "r") {
             let left_length = left.split("").length
             $('.tape__' + i + '.tape__right').html(select + right);
             if (left != "") {
@@ -345,6 +399,7 @@ var find_next_step = function() {
 
 var reset_button_disables = function() {
     $(".step__button").prop("disabled", true);
+    $(".previous__button").prop("disabled", true);
     $(".run__button").prop("disabled", true);
     $(".pause__button").prop("disabled", true);
     $(".reset__button").prop("disabled", true);
@@ -354,6 +409,7 @@ var reset_button_disables = function() {
 
 var run_button_disables = function() {
     $(".step__button").prop("disabled", true);
+    $(".previous__button").prop("disabled", true);
     $(".run__button").prop("disabled", true);
     $(".pause__button").prop("disabled", false);
     $(".reset__button").prop("disabled", false);
@@ -363,6 +419,7 @@ var run_button_disables = function() {
 
 var pause_button_disables = function() {
     $(".step__button").prop("disabled", false);
+    $(".previous__button").prop("disabled", false);
     $(".run__button").prop("disabled", false);
     $(".pause__button").prop("disabled", true);
     $(".reset__button").prop("disabled", false);
@@ -372,6 +429,7 @@ var pause_button_disables = function() {
 
 var set_button_disables = function() {
     $(".step__button").prop("disabled", false);
+    $(".previous__button").prop("disabled", false);
     $(".run__button").prop("disabled", false);
     $(".pause__button").prop("disabled", true);
     $(".reset__button").prop("disabled", false);
@@ -381,6 +439,7 @@ var set_button_disables = function() {
 
 var new_button_disables = function() {
     $(".step__button").prop("disabled", true);
+    $(".previous__button").prop("disabled", true);
     $(".run__button").prop("disabled", true);
     $(".pause__button").prop("disabled", true);
     $(".reset__button").prop("disabled", true);

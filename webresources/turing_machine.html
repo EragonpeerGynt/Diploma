@@ -13,6 +13,7 @@
      --><div class='controls'>
            <button class='no__select no__select box__configuration'>Ukazi</div><!--
          --><button class='control__button step__button' disabled>Korak TP</button><!--
+         --><button class='control__button previous__button' disabled>Prejšni Korak</button><!--
          --><button class='control__button run__button' disabled>Zaženi TP</button><!--
          --><button class='control__button pause__button' disabled>Ustavi</button><!--
          --><button class='control__button reset__button' disabled>Ponastavi TS</button><!--
@@ -54,7 +55,7 @@
     var number_of_heads = 1;
     var current_state = "S0";
     var final_state = "SF";
-    var empty_symbol = "_"
+    var empty_symbol = "_";
     var previous_step = {
         internal_step: null,
         self_listener: function(val) {},
@@ -139,7 +140,20 @@
         reset_index_value: function() {
             this.internal_index = [];
         }
-    }
+    };
+    
+    var step_history = {
+        private_history: [],
+        set new_step(val) {
+            this.private_history.push(val);
+        },
+        get previous_step() {
+            return this.private_history.pop();
+        },
+        reset_history: function() {
+            this.private_history = [];
+        }
+    };
 </script>
 
 <script src='./Scripts/backend_scripts.js'></script>
