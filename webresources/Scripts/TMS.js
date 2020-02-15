@@ -65,6 +65,10 @@ $(document).ready(function(){
         }
     });
 
+    $('.deterministic__button').click(function(selector) {
+        interpreter_mode_button();
+    });
+
     previous_step.register_listener(function(val) {
         console.log("previous step is " + val)
     });
@@ -122,6 +126,17 @@ var revert_button = function() {
     update_camera_view();
     update_displayed_state();
     ide_index_next.i = find_next_step();
+}
+
+var interpreter_mode_button = function() {
+    if (non_deterministic_runtime) {
+        $(".deterministic__button").html("Deterministični TS");
+        non_deterministic_runtime = false;
+    }
+    else {
+        $(".deterministic__button").html("Ne-deterministični TS");
+        non_deterministic_runtime = true;
+    }
 }
 
 var auto_run = function(selector, command) {
@@ -225,7 +240,18 @@ var step_machine = function() {
     for (let i = 1; i <= number_of_heads; i++) {
         head_vission.push($('.tape__' + i + '.tape__select').html());
     }
-    let execute_command = custom_regex(current_state, head_vission, program);
+    let execute_command = [];
+    if (!non_deterministic_runtime) {
+        execute_command = custom_regex(current_state, head_vission, program);
+    }
+    else if (non_deterministic_runtime) {
+        execute_command = find_shortest_branch()[0];
+        if (execute_command == "No steps left" || execute_command == "Out Of Depth") {
+            alert(execute_command);
+            return;
+        }
+        execute_command = execute_command.split(" ");
+    }
     if (execute_command == null) {
         window.alert("Najdena ni bila nobena\nustrezna translacija");
         return 
