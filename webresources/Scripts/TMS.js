@@ -87,11 +87,16 @@ $(document).ready(function(){
         $('#number' + val).append("<div class='step step__next'>");
     });
     non_deterministic_errors.register_listener(function(val) {
-        console.log("Non deterministic indexes are " + val)
-        $('.step__nondeterministic').remove();
-        for(rowNum of val) {
-            $('#number' + (parseInt(rowNum)+1)).append("<div class='step step__nondeterministic'>");
+        if(!non_deterministic_runtime){
+            console.log("Non deterministic indexes are " + val)
+            $('.step__nondeterministic').remove();
+            for(rowNum of val) {
+                $('#number' + (parseInt(rowNum)+1)).append("<div class='step step__nondeterministic'>");
+            }
         }
+        else {
+            $('.step__nondeterministic').remove();
+        }        
     });
     
     $('.control__button').click(update_displayed_state);
@@ -126,6 +131,8 @@ var revert_button = function() {
     update_camera_view();
     update_displayed_state();
     ide_index_next.i = find_next_step();
+    ide_index_previous.reset_index_value();
+    previous_step.reset_step_value();
 }
 
 var interpreter_mode_button = function() {
@@ -137,6 +144,8 @@ var interpreter_mode_button = function() {
         $(".deterministic__button").html("Ne-deterministični TS");
         non_deterministic_runtime = true;
     }
+    non_deterministic_errors.i = find_full_execute_match();
+    find_next_step();
 }
 
 var auto_run = function(selector, command) {
@@ -250,6 +259,7 @@ var step_machine = function() {
             alert(execute_command);
             return;
         }
+        previous_step.step = [current_state].concat(head_vission.join(",")).concat([execute_command]).join(" ");
         execute_command = execute_command.split(" ");
     }
     if (execute_command == null) {
@@ -331,6 +341,7 @@ var head_mover = function(moves) {
 }
 
 var reverse_head_mover = function(moves) {
+    console.log("headmover proži")
     for (let i = 1; i <= number_of_heads; i++) {
         let left = $('.tape__' + i + '.tape__left').html();
         let right = $('.tape__' + i + '.tape__right').html();
@@ -412,15 +423,28 @@ var find_next_step = function() {
     for (let i = 1; i <= number_of_heads; i++) {
         head_vission.push($('.tape__' + i + '.tape__select').html());
     }
-    for (let command of program) {
-        if (custom_comparator(current_state, head_vission, command.split(" ").slice(0,2))) {
-            next_step.step = command;
-            ide_index_next.i = command_index_finder(command);
-            return ide_index_next.i
+    if (!non_deterministic_runtime) {
+        for (let command of program) {
+            if (custom_comparator(current_state, head_vission, command.split(" ").slice(0,2))) {
+                next_step.step = command;
+                ide_index_next.i = command_index_finder(command);
+                return ide_index_next.i
+            }
         }
+        next_step.step = null;
+        return null;
     }
-    next_step.step = null;
-    return null;
+    else if(non_deterministic_runtime) {
+        let tmp_command = find_shortest_branch()[0];
+        if (tmp_command == "No steps left" || tmp_command == "Out Of Depth") {
+            next_step.step = null;
+            return null;
+        }
+        let command = [current_state].concat(head_vission.join(",")).concat([tmp_command]).join(" ");
+        next_step.step = command;
+        ide_index_next.i = command_index_finder(command);
+        return ide_index_next.i
+    }
 }
 
 var reset_button_disables = function() {

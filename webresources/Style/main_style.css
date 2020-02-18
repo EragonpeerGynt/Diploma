@@ -110,13 +110,13 @@ tr, th {
     left: 0%;
     right: 50%;
     width:50%;
-    background-color: rgba(255, 0 , 0, 0.5);
+    background-color: rgba(0, 167, 36, 0.5);
 }
 
 .step__next {
     left: 50%;
     right: 100%;
-    background-color: rgba(0, 167, 36, 0.5);
+    background-color: rgba(255, 0 , 0, 0.5);
 }
 
 .step__nondeterministic {
