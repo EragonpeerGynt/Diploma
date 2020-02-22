@@ -412,8 +412,21 @@ var command_index_finder = function(command) {
     }
     let program = $("#codeText").val().split("\n", -1);
     for(let command_index = 0; command_index < program.length; command_index++) {
-        if (program[parseInt(command_index)] == command) {
-            return parseInt(command_index)+1;
+        let split_command = command.split(" ");
+        let split_program = program[parseInt(command_index)].split(" ");
+        if(split_program[0] == split_command[0] && split_program[2] == split_command[2] && split_program[3] == split_command[3] && split_program[4] == split_command[4]) {
+            let window_c = split_command[1].split(",");
+            let window_p = split_program[1].split(",");
+            let same = true;
+            for (let window_i = 0; window_i < window_p.length; window_i ++) {
+                if(window_c[window_i] != window_p[window_i] && window_p[window_i] != "*") {
+                    same = false;
+                    break;
+                }
+            }
+            if (same) {
+                return parseInt(command_index)+1;
+            }
         }
     }
     return null;
