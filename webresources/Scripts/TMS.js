@@ -125,6 +125,7 @@ var revert_button = function() {
         return;
     }
     var reverted_move = step_history.previous_step.split(" ");
+    console.log(reverted_move);
     reverse_head_mover(reverted_move[2].split(","));
     head_writter(reverted_move[1].split(","));
     current_state = reverted_move[0];
@@ -252,6 +253,9 @@ var step_machine = function() {
     let execute_command = [];
     if (!non_deterministic_runtime) {
         execute_command = custom_regex(current_state, head_vission, program);
+        let previous_step_state = (([current_state].concat([head_vission.join(",")])).concat([execute_command[1]])).join(" ");
+        console.log(previous_step_state);
+        step_history.new_step = previous_step_state;
     }
     else if (non_deterministic_runtime) {
         execute_command = find_shortest_branch()[0];
@@ -259,16 +263,16 @@ var step_machine = function() {
             alert(execute_command);
             return;
         }
-        previous_step.step = [current_state].concat(head_vission.join(",")).concat([execute_command]).join(" ");
         execute_command = execute_command.split(" ");
+        let previous_step_state = (([current_state].concat([head_vission.join(",")])).concat([execute_command[1]])).join(" ");
+        previous_step.step = previous_step_state;
+        console.log(previous_step_state);
+        step_history.new_step = previous_step_state;
     }
     if (execute_command == null) {
         window.alert("Najdena ni bila nobena\nustrezna translacija");
         return 
     }
-    var previous_step_state = (([current_state].concat(head_vission)).concat([execute_command[1]])).join(" ");
-    console.log(previous_step_state);
-    step_history.new_step = previous_step_state;
     let command_setters = execute_command[0].split(",");
     let command_movers = execute_command[1].split(',');
     let command_new_state = execute_command[2];
@@ -341,7 +345,6 @@ var head_mover = function(moves) {
 }
 
 var reverse_head_mover = function(moves) {
-    console.log("headmover proži")
     for (let i = 1; i <= number_of_heads; i++) {
         let left = $('.tape__' + i + '.tape__left').html();
         let right = $('.tape__' + i + '.tape__right').html();

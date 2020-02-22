@@ -29,6 +29,7 @@ var non_deterministic_iterator = function(virtual_cores) {
         }
         virtual_cores = Object.assign([], new_vtms);
         new_vtms = [];
+        console.log("---");
     }
     return ["Out Of Depth"];
 }
@@ -56,7 +57,7 @@ var process_step = function(step_command, curr_tms) {
     curr_tms.current_state = split_command[2];
     let head_set = split_command[0].split(",");
     for (let tape = 0; tape < curr_tms.head_number; tape++) {
-        if (head_set != "*") {
+        if (head_set[tape] != "*") {
             curr_tms.head_tape[tape] = head_set[tape];
         }
     }
@@ -118,15 +119,27 @@ var find_steps = function(curr_tms) {
 
 var compare_step_and_state = function(step, curr_tms) {
     let split_step = step.split(" ");
+
     if (split_step[0] != curr_tms.current_state) {
         return false
     }
     let split_head = split_step[1].split(",");
     for(let i = 0; i < split_head.length; i++) {
-        if(split_head[i] != curr_tms.head_tape[i] && split_head != "*") {
+        if(split_head[i] != curr_tms.head_tape[i] && split_head[i] != "*") {
             return false;
         }
     }
     return split_step.slice(2).join(" ");
 }
 
+/*
+S0 0,* 0,0 R,R S0
+S0 1,* 1,1 R,R S0
+S0 1,* *,* *,L S1
+S0 0,* *,* *,L S1
+S0 1,* *,* *,L S0
+S0 0,* *,* *,L S0
+S1 0,0 0,_ R,L S1
+S1 1,1 1,_ R,L S1
+S1 _,_ *,* *,* SF
+*/
