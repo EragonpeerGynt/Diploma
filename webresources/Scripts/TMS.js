@@ -263,10 +263,10 @@ var step_machine = function() {
             alert(execute_command);
             return;
         }
-        execute_command = execute_command.split(" ");
+        previous_step.step = execute_command;
+        console.log("new ", execute_command);
+        execute_command = execute_command.split(" ").slice(2);
         let previous_step_state = (([current_state].concat([head_vission.join(",")])).concat([execute_command[1]])).join(" ");
-        previous_step.step = previous_step_state;
-        console.log(previous_step_state);
         step_history.new_step = previous_step_state;
     }
     if (execute_command == null) {
@@ -456,9 +456,8 @@ var find_next_step = function() {
             next_step.step = null;
             return null;
         }
-        let command = [current_state].concat(head_vission.join(",")).concat([tmp_command]).join(" ");
-        next_step.step = command;
-        ide_index_next.i = command_index_finder(command);
+        next_step.step = tmp_command;
+        ide_index_next.i = command_index_finder(tmp_command);
         return ide_index_next.i
     }
 }

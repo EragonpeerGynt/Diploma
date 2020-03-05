@@ -54,14 +54,14 @@ var create_virtual_tms = function() {
 
 var process_step = function(step_command, curr_tms) {
     let split_command = step_command.split(" ");
-    curr_tms.current_state = split_command[2];
-    let head_set = split_command[0].split(",");
+    curr_tms.current_state = split_command[4];
+    let head_set = split_command[2].split(",");
     for (let tape = 0; tape < curr_tms.head_number; tape++) {
         if (head_set[tape] != "*") {
             curr_tms.head_tape[tape] = head_set[tape];
         }
     }
-    let move_set = split_command[1].split(",");
+    let move_set = split_command[3].split(",");
     for (let tape = 0; tape < curr_tms.head_number; tape++) {
         if (move_set == "*") {
             continue;
@@ -129,7 +129,7 @@ var compare_step_and_state = function(step, curr_tms) {
             return false;
         }
     }
-    return split_step.slice(2).join(" ");
+    return split_step.join(" ");
 }
 
 /*
