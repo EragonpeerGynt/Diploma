@@ -29,7 +29,6 @@ var non_deterministic_iterator = function(virtual_cores) {
         }
         virtual_cores = Object.assign([], new_vtms);
         new_vtms = [];
-        console.log("---");
     }
     return ["Out Of Depth"];
 }
@@ -137,6 +136,8 @@ S0 0,* 0,0 R,R S0
 S0 1,* 1,1 R,R S0
 S0 1,* *,_ *,L S1
 S0 0,* *,_ *,L S1
+S0 1,* *,_ R,L S1
+S0 0,* *,_ R,L S1
 S0 1,* *,* *,L S0
 S0 0,* *,* *,L S0
 S1 0,0 0,_ R,L S1
